@@ -10,6 +10,7 @@ app.get('/api/weather', async (req, res) => {
     const response = await axios.get('https://api.open-meteo.com/v1/forecast?latitude=37.5&longitude=127&hourly=temperature_2m');
     res.json(response.data);
   } catch (error) {
+    console.error('날씨 API 오류:', error.message);
     res.status(500).send("API 오류");
   }
 });
