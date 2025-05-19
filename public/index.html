@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>날씨 차트</title>
+  <meta charset="UTF-8">
+  <title>시간별 기온 차트</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -10,25 +11,30 @@
 
   <script>
     async function fetchWeather() {
-      const res = await fetch('/api/weather');
-      const data = await res.json();
-      const hours = data.hourly.time.slice(0, 24);
-      const temps = data.hourly.temperature_2m.slice(0, 24);
+      try {
+        const res = await fetch('/api/weather');
+        const data = await res.json();
 
-      const ctx = document.getElementById('weatherChart').getContext('2d');
-      new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: hours.map(t => t.split('T')[1]),
-          datasets: [{
-            label: '기온(℃)',
-            data: temps,
-            borderColor: 'blue',
-            backgroundColor: 'lightblue',
-            tension: 0.4
-          }]
-        }
-      });
+        const hours = data.hourly.time.slice(0, 24);
+        const temps = data.hourly.temperature_2m.slice(0, 24);
+
+        const ctx = document.getElementById('weatherChart').getContext('2d');
+        new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: hours.map(t => t.split('T')[1]),
+            datasets: [{
+              label: '기온(℃)',
+              data: temps,
+              borderColor: 'blue',
+              backgroundColor: 'lightblue',
+              tension: 0.4
+            }]
+          }
+        });
+      } catch (e) {
+        console.error("날씨 API 로딩 실패", e);
+      }
     }
 
     fetchWeather();
